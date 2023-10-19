@@ -7,10 +7,14 @@ const app = express();
 app.use(json());
 app.use(urlencoded({ extended: false }));
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Db connection
-mongoose.connect('mongodb://localhost:27017/beveragedb');
+// mongoose.connect('mongodb://localhost:27017/beveragedb');
+// mongoose.connect('mongodb+srv://venlomj:Prijor1724@mjcluster.8rhdofc.mongodb.net/beveragedb?retryWrites=true&w=majority');
+
+const uri = process.env.MONGODB_URI;
+mongoose.connect(uri)
 
 const db = mongoose.connection;
 
@@ -39,7 +43,7 @@ const beverageSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    beverageImage: {
+    beverage_image: {
         type: String,
         required: false,
     }
@@ -76,7 +80,7 @@ app.post('/api/beverages/add', async (req, res) => {
 });
 
 //get by id
-app.get('/api/beverages/:id', async (req, res) => {
+app.get('/api/beverages/get/:id', async (req, res) => {
     try {
         const {id} = req.params;
         const beverage = await Beverage.findById(id);
@@ -85,8 +89,23 @@ app.get('/api/beverages/:id', async (req, res) => {
         res.status(500).json({message: error.message})
     }
 });
+
+// Get beverage by name
+app.get('/api/beverages/name/:name', async (req, res) => {
+    try {
+        const { name } = req.params;
+        const beverage = await Beverage.findOne({ name: name });
+        if (!beverage) {
+            return res.status(404).json({ message: `Beverage with name ${name} not found` });
+        }
+        res.status(200).json(beverage);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Update a beverage
-app.put('/api/beverages/:id', async (req, res) => {
+app.put('/api/beverages/update/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const beverage = await Beverage.findByIdAndUpdate(id, req.body);
@@ -103,7 +122,7 @@ app.put('/api/beverages/:id', async (req, res) => {
 });
 
 // Delete a beverage
-app.delete('/api/beverages/:id', async (req, res) => {
+app.delete('/api/beverages/delete/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const beverage = await Beverage.findByIdAndDelete(id, req.body);
