@@ -1,4 +1,8 @@
+[buil]
+  command = "node server.js"
+  publish="/build"
+  base="."
 [[redirects]]
   from = "/api/*"
-  to = "/api/:splat"
+  to = "/server.js"
   status = 200
