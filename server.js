@@ -21,6 +21,12 @@ const uri = process.env.MONGO_URI
 console.log("Mongo URI:", uri); // Log the URI
 
 mongoose.connect(uri)
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
 
 const db = mongoose.connection;
 
