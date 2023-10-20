@@ -1,6 +1,10 @@
+require('dotenv').config();
+
+
 const express = require('express');
 const mongoose = require('mongoose');
 const { json, urlencoded } = require('body-parser');
+
 
 const app = express();
 
@@ -13,7 +17,9 @@ const port = process.env.PORT || 3000;
 // mongoose.connect('mongodb://localhost:27017/beveragedb');
 // mongoose.connect('mongodb+srv://venlomj:Prijor1724@mjcluster.8rhdofc.mongodb.net/beveragedb?retryWrites=true&w=majority');
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGO_URI
+console.log("Mongo URI:", uri); // Log the URI
+
 mongoose.connect(uri)
 
 const db = mongoose.connection;
