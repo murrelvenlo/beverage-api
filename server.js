@@ -6,14 +6,12 @@ const mongoose = require('mongoose');
 const { json, urlencoded } = require('body-parser');
 const cors = require('cors');
 
-
 const app = express();
 
 app.use(json());
 app.use(urlencoded({ extended: false }));
-app.use(cors({
-    origin: '*'
-}));
+
+app.use(cors());
 
 const port = process.env.PORT || 3000;
 
@@ -160,3 +158,5 @@ app.listen(port, () => {
 });
 
 module.exports = app;
+
+
