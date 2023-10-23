@@ -13,6 +13,11 @@ app.use(urlencoded({ extended: false }));
 
 const port = process.env.PORT || 3000;
 
+const cors = require('cors');
+app.use(cors({
+    origin: '*'
+}));
+
 // Db connection
 // mongoose.connect('mongodb://localhost:27017/beveragedb');
 // mongoose.connect('mongodb+srv://venlomj:Prijor1724@mjcluster.8rhdofc.mongodb.net/beveragedb?retryWrites=true&w=majority');
