@@ -4,19 +4,19 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { json, urlencoded } = require('body-parser');
+const cors = require('cors');
 
 
 const app = express();
 
 app.use(json());
 app.use(urlencoded({ extended: false }));
-
-const port = process.env.PORT || 3000;
-
-const cors = require('cors');
 app.use(cors({
     origin: '*'
 }));
+
+const port = process.env.PORT || 3000;
+
 
 // Db connection
 // mongoose.connect('mongodb://localhost:27017/beveragedb');
