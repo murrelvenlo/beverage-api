@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const { json, urlencoded } = require('body-parser');
 const cors = require('cors');
 const multer = require('multer');
+const path = require('path');
 
 const app = express();
 
@@ -84,7 +85,7 @@ app.get('/api/beverages', async (req, res) => {
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'assets/') // I will store the images in the assets folder of the frontend
+        cb(null, path.join(__dirname, 'assets')); // I will store the images in the assets folder of the frontend
     },
     filename: function (req, file, cb) {
         const fileName = file.originalname;
@@ -118,6 +119,9 @@ app.post('/api/beverages/add', upload.single('beverage_image'), async (req, res)
         res.status(500).json({ message: error.message });
     }
 });
+
+// Serve images from the 'assets' directory
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 //get by id
 app.get('/api/beverages/get/:id', async (req, res) => {
