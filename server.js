@@ -25,7 +25,7 @@ const port = process.env.PORT || 3000;
 const uri = process.env.MONGO_URI
 console.log("Mongo URI:", uri); // Log the URI
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, writeConcern: { w: "majority" } })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, writeConcern: { w: "majority" }, useFindAndModify: false })
   .then(() => {
     console.log('Connected to MongoDB');
   })
@@ -149,10 +149,18 @@ app.get('/api/beverages/name/:name', async (req, res) => {
 });
 
 // Update a beverage
-app.put('/api/beverages/update/:id', async (req, res) => {
+app.put('/api/beverages/update/:id', upload.single('beverage_image'), async (req, res) => {
     try {
         const { id } = req.params;
-        const beverage = await Beverage.findByIdAndUpdate(id, req.body);
+        let updateBeverage = req.body;
+
+        if(req.file) {
+            updateBeverage = {
+                ...updateBeverage,
+                beverage_image: req.file.filename,
+            };
+        }
+        const beverage = await Beverage.findByIdAndUpdate(id, updateBeverage, { new: true });
 
         if(!beverage) {
             return res.status(404).json({message: `cannot find any beverage witg the id, ${id}`})
