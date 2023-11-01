@@ -73,15 +73,36 @@ app.get('/', (req, res) => {
     res.send('Hello Beverage API')
 })
 
-// Retrieve beverages
+// Retrieve beverages with images
 app.get('/api/beverages', async (req, res) => {
     try {
         const beverages = await Beverage.find({});
-        res.status(200).json(beverages);
+        const beveragesWithImages = beverages.map(beverage => {
+            return {
+                _id: beverage._id,
+                name: beverage.name,
+                sugar: beverage.sugar,
+                rating: beverage.rating,
+                scanned: beverage.scanned,
+                beverage_image: beverage.beverage_image ? `${req.protocol}://${req.get('host')}/assets/${beverage.beverage_image}` : null
+            };
+        });
+        res.status(200).json(beveragesWithImages);
     } catch (error) {
-        res.status(500).json({message: error.message})
+        res.status(500).json({ message: error.message });
     }
 });
+
+
+// // Retrieve beverages
+// app.get('/api/beverages', async (req, res) => {
+//     try {
+//         const beverages = await Beverage.find({});
+//         res.status(200).json(beverages);
+//     } catch (error) {
+//         res.status(500).json({message: error.message})
+//     }
+// });
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
